@@ -8,10 +8,10 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [ContainerComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes)
-  ]
+  ],
+  declarations: [ContainerComponent],
 })
 export class HomeModule { }
