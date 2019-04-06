@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, Input } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { IPhoto } from 'src/app/interfaces/iphoto';
 import { Subscriber, interval } from 'rxjs';
@@ -30,15 +30,15 @@ import { Subscriber, interval } from 'rxjs';
 
 
 export class SliderComponent implements OnInit, OnDestroy {
+  // Lógica del componente
   sliderShow = 'show';
-  photos: Array<IPhoto> = [
-    { href: '/home', alt: 'hola soy un alt', src: 'https://angular.io/assets/images/logos/angular/angular.svg'},
-    { href: '/home', alt: 'hola soy un alt', src: 'https://angular.io/assets/images/logos/angular/angular.svg'},
-    { href: '/home', alt: 'hola soy un alt', src: 'https://angular.io/assets/images/logos/angular/angular.svg'},
-    { href: '/home', alt: 'hola soy un alt', src: 'https://angular.io/assets/images/logos/angular/angular.svg'}
-  ];
-  sliderInterval: any;
+  photosShow = [];
   selected: number = 0;
+  sliderInterval: any;
+
+  // Lógica de datos y muestras
+  @Input() photos: Array<IPhoto> = [];
+  @Input() cantOfImageShow: number = 1;
 
   constructor() { }
 
@@ -60,6 +60,7 @@ export class SliderComponent implements OnInit, OnDestroy {
         // if (this.selected === paginator) {
         //   this.selected = 0;
         // }
+        this.selected++;
         this.sliderChange(this.selected, false);
       });
   }
@@ -72,10 +73,16 @@ export class SliderComponent implements OnInit, OnDestroy {
       }, 5000);
     }
     this.sliderShow = 'hide';
-    this.selected++;
-    const paginator = this.photos.length;
-    if (this.selected === paginator) {
+    // this.selected++;
+    const _selectect = selected * this.cantOfImageShow;
+    const paginator = this.photos.length / this.cantOfImageShow;
+    if (_selectect === paginator) {
       this.selected = 0;
+    }
+    this.photosShow = [];
+    for (let i = 0; i < this.cantOfImageShow; i++) {
+      const pointer = selected + 1;
+      this.photosShow.push(this.photos[pointer]);
     }
     setTimeout(() => {
       this.sliderShow = 'show';
